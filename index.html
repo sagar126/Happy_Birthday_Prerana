@@ -684,6 +684,12 @@ p {
   <div id="stars"></div>
 </div>
 
+<div class="top-controls">
+  <audio id="backgroundMusic" loop preload="auto"></audio>
+  <button class="icon-btn" id="soundButton"
+    aria-label="Toggle sound" onclick="toggleSound()">♫</button>
+</div>
+
 <div id="progress"></div>
 
 <main id="app">
@@ -1037,6 +1043,9 @@ for(let i=0; i<12; i++) {
 
 let audioContext = null;
 let soundEnabled = false;
+const backgroundMusic = document.getElementById("backgroundMusic");
+backgroundMusic.src = "music/Shyam Ke Rang Rangaai Unreleased Radha Entry Song Krishnaavataram-Part 1 The Heart (Hridayam).mp3";
+backgroundMusic.volume = 0.45;
 
 function toggleSound() {
 
