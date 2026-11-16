@@ -684,14 +684,6 @@ p {
   <div id="stars"></div>
 </div>
 
-<div class="top-controls">
-  <label class="icon-btn" for="musicPicker" title="Choose your own music file" aria-label="Choose music file">🎵</label>
-  <input id="musicPicker" type="file" accept="audio/*" hidden>
-  <audio id="backgroundMusic" loop preload="auto"></audio>
-  <button class="icon-btn" id="soundButton"
-    aria-label="Toggle sound" onclick="toggleSound()">♫</button>
-</div>
-
 <div id="progress"></div>
 
 <main id="app">
@@ -948,28 +940,6 @@ p {
    EDIT THIS SECTION
 ====================================== */
 
-const DEFAULT_MUSIC_FILE = "music/your-song.mp3";
-
-const backgroundMusic = document.getElementById("backgroundMusic");
-const musicPicker = document.getElementById("musicPicker");
-
-backgroundMusic.src = DEFAULT_MUSIC_FILE;
-backgroundMusic.volume = 0.45;
-
-musicPicker.addEventListener("change", function(event) {
-  const [file] = event.target.files || [];
-
-  if(!file) return;
-
-  backgroundMusic.src = URL.createObjectURL(file);
-
-  if(soundEnabled) {
-    backgroundMusic.play().catch(() => {
-      console.log("Music playback requires an interaction to start.");
-    });
-  }
-});
-
 const PERSONAL = {
 
   name: "Prerana",
@@ -1083,10 +1053,8 @@ function toggleSound() {
     }
     playTone(523, .15);
   } else {
-    if(backgroundMusic) {
-      backgroundMusic.pause();
-      backgroundMusic.currentTime = 0;
-    }
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
   }
 
 }
