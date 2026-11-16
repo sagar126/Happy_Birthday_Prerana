@@ -2,11 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta property="og:image"
+content="https://sagar126.github.io/Happy_Birthday_Prerana/Images/Cover.png">
+<meta property="og:title" content="Jayyam's Birthday">
+<meta property="og:description" content="consider this moment 11:11. A little universe for you, Preruu.">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#09091b">
-<meta property="og:image"
-content="https://sagar126.github.io/Happy_Birthday_Prerana/Images/Cover.png">
 <title>A Little Universe For You</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -683,6 +685,9 @@ p {
 </div>
 
 <div class="top-controls">
+  <label class="icon-btn" for="musicPicker" title="Choose your own music file" aria-label="Choose music file">🎵</label>
+  <input id="musicPicker" type="file" accept="audio/*" hidden>
+  <audio id="backgroundMusic" loop preload="auto"></audio>
   <button class="icon-btn" id="soundButton"
     aria-label="Toggle sound" onclick="toggleSound()">♫</button>
 </div>
@@ -943,6 +948,28 @@ p {
    EDIT THIS SECTION
 ====================================== */
 
+const DEFAULT_MUSIC_FILE = "music/your-song.mp3";
+
+const backgroundMusic = document.getElementById("backgroundMusic");
+const musicPicker = document.getElementById("musicPicker");
+
+backgroundMusic.src = DEFAULT_MUSIC_FILE;
+backgroundMusic.volume = 0.45;
+
+musicPicker.addEventListener("change", function(event) {
+  const [file] = event.target.files || [];
+
+  if(!file) return;
+
+  backgroundMusic.src = URL.createObjectURL(file);
+
+  if(soundEnabled) {
+    backgroundMusic.play().catch(() => {
+      console.log("Music playback requires an interaction to start.");
+    });
+  }
+});
+
 const PERSONAL = {
 
   name: "Prerana",
@@ -1035,7 +1062,7 @@ for(let i=0; i<12; i++) {
 
 /* ======================================
    SOUND ENGINE
-   No external audio files required
+   Supports your own local music file
 ====================================== */
 
 let audioContext = null;
@@ -1049,7 +1076,17 @@ function toggleSound() {
     soundEnabled ? "♫" : "♪";
 
   if(soundEnabled) {
+    if(backgroundMusic && backgroundMusic.src) {
+      backgroundMusic.play().catch(() => {
+        console.log("Music playback requires an interaction to start.");
+      });
+    }
     playTone(523, .15);
+  } else {
+    if(backgroundMusic) {
+      backgroundMusic.pause();
+      backgroundMusic.currentTime = 0;
+    }
   }
 
 }
