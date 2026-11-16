@@ -685,7 +685,7 @@ p {
 </div>
 
 <div class="top-controls">
-  <audio id="backgroundMusic" loop preload="auto"></audio>
+  <audio id="backgroundMusic" autoplay loop preload="auto"></audio>
   <button class="icon-btn" id="soundButton"
     aria-label="Toggle sound" onclick="toggleSound()">♫</button>
 </div>
@@ -1047,23 +1047,37 @@ const backgroundMusic = document.getElementById("backgroundMusic");
 backgroundMusic.src = "music/Shyam Ke Rang Rangaai Unreleased Radha Entry Song Krishnaavataram-Part 1 The Heart (Hridayam).mp3";
 backgroundMusic.volume = 0.45;
 
+function startBackgroundMusic() {
+  backgroundMusic.play().then(() => {
+    soundEnabled = true;
+    document.getElementById("soundButton").textContent = "♫";
+  }).catch(() => {
+    soundEnabled = false;
+    document.getElementById("soundButton").textContent = "♪";
+    console.info("Music autoplay was blocked; it will start after your first interaction.");
+  });
+}
+
+document.addEventListener("click", function startMusicAfterInteraction(event) {
+  if(event.target.id !== "soundButton" && backgroundMusic.paused) {
+    startBackgroundMusic();
+  }
+}, { once: true });
+
+startBackgroundMusic();
+
 function toggleSound() {
 
-  soundEnabled = !soundEnabled;
-
-  document.getElementById("soundButton").textContent =
-    soundEnabled ? "♫" : "♪";
-
-  if(soundEnabled) {
-    if(backgroundMusic && backgroundMusic.src) {
-      backgroundMusic.play().catch(() => {
-        console.log("Music playback requires an interaction to start.");
-      });
-    }
+  if(backgroundMusic.paused) {
+    soundEnabled = true;
+    document.getElementById("soundButton").textContent = "♫";
+    startBackgroundMusic();
     playTone(523, .15);
   } else {
+    soundEnabled = false;
     backgroundMusic.pause();
     backgroundMusic.currentTime = 0;
+    document.getElementById("soundButton").textContent = "♪";
   }
 
 }
